@@ -16,7 +16,18 @@ namespace PTTGCSampleApp.Repository
             _store = new Dictionary<int, UserProfile>();
         }
 
+        [Obsolete("Use InsertUserV2(UserProfile User) instead")]
         public UserProfile InsertUser(UserProfile User)
+        {
+            // Ignore given id
+            int generatedID = _store.Count + 1;
+            User.Id = generatedID;
+            _store.Add(generatedID, User);
+
+            return User;
+        }
+
+        public UserProfile InsertUserV2(UserProfile User)
         {
             // Ignore given id
             int generatedID = _store.Count + 1;
@@ -36,6 +47,16 @@ namespace PTTGCSampleApp.Repository
             if (_store.ContainsKey(UserID))
             {
                 return _store[UserID];
+            }
+
+            return null;
+        }
+
+        public UserProfile GetUserProfileByID(String stmt)
+        {
+            if (_store.ContainsKey(1))
+            {
+                return _store[1];
             }
 
             return null;

@@ -33,9 +33,24 @@ namespace PTTGCSampleApp.Controllers
             return new NotFoundObjectResult(null);
         }
 
+        [HttpGet("name/{name}", Name ="GetName")]
+        public IActionResult GetName([FromQuery(Name = "name")] String name)
+        {
+            // Bad code
+            dynamic o = new UserProfile();
+            o.MethodNotFound(5);
+
+            // SQL Injection
+            String query = "SELECT * FROM Users WHERE UserName = " + name;
+            UserProfile a = _repository.GetUserProfileByID(query);
+
+            return new OkObjectResult(a);
+        }
+
         [HttpPost]
         public IActionResult Create([FromBody] UserProfile User)
         {
+            User.Password = GeneratePassword();
             UserProfile inserted = _repository.InsertUser(User);
             return new OkObjectResult(inserted);
         }
@@ -44,6 +59,12 @@ namespace PTTGCSampleApp.Controllers
         public IActionResult List()
         {
             return new OkObjectResult(_repository.GetUsers());
+        }
+
+        string GeneratePassword()
+        {
+            Random gen = new Random();
+            return "pass" + gen.Next();
         }
     }
 }
