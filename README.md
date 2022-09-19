@@ -1,5 +1,4 @@
-# Source code scanning
-
+# Source code scanning #
 
 ## Exercise 1
 ### Set up basic CodeQL
